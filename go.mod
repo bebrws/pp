@@ -1,4 +1,4 @@
-module github.com/bebrws/pp
+module github.com/bebrws/pp/v1
 
 go 1.14
 
