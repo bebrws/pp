@@ -21,8 +21,12 @@ var (
 	BufferFoldThreshold = 1024
 	// PrintMapTypes when set to true will have map types will always appended to maps.
 	PrintMapTypes = true
+	printNil      = false
 )
 
+func setPrintNil(newPrintNil bool) {
+	printNil = newPrintNil
+}
 func format(object interface{}) string {
 	return newPrinter(object).String()
 }
@@ -166,7 +170,12 @@ func (p *printer) printMap() {
 		keys := p.value.MapKeys()
 		for i := 0; i < p.value.Len(); i++ {
 			value := p.value.MapIndex(keys[i])
-			p.indentPrintf("%s:\t%s,\n", p.format(keys[i]), p.format(value))
+			if !printNil && value.IsNil() {
+
+			} else {
+				p.indentPrintf("%s:\t%s,\n", p.format(keys[i]), p.format(value))
+			}
+
 		}
 	})
 	p.indentPrint("}")
@@ -188,7 +197,12 @@ func (p *printer) printStruct() {
 		for i := 0; i < p.value.NumField(); i++ {
 			field := colorize(p.value.Type().Field(i).Name, currentScheme.FieldName)
 			value := p.value.Field(i)
-			p.indentPrintf("%s:\t%s,\n", field, p.format(value))
+			if !printNil && value.IsNil() {
+
+			} else {
+				p.indentPrintf("%s:\t%s,\n", field, p.format(value))
+			}
+
 		}
 	})
 	p.indentPrint("}")
